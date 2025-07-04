@@ -5,19 +5,17 @@
 #include <MFRC522.h>
 #include <secrets.h>
 
-// === RFID ===
 #define RST_PIN 22
 #define SS_PIN 5
 MFRC522 mfrc522(SS_PIN, RST_PIN);
 
-// === Objetos Firebase ===
 FirebaseData fbdo;
 FirebaseAuth auth;
 FirebaseConfig config;
 
-#include <time.h>
 
 void setup() {
+
   Serial.begin(115200);
   SPI.begin(18, 19, 23, SS_PIN);
   mfrc522.PCD_Init();
@@ -32,16 +30,18 @@ void setup() {
   }
   Serial.println("\nWi-Fi conectado!");
 
-  // Firebase setup
+
   config.api_key = API_KEY;
   config.database_url = DATABASE_URL;
   auth.user.email = USER_EMAIL;
   auth.user.password = USER_PASSWORD;
 
+
   Firebase.begin(&config, &auth);
   fbdo.setBSSLBufferSize(2048, 512);
   fbdo.setResponseSize(1024);
   Firebase.reconnectWiFi(true);
+
 }
 
 String lastProcessedUID = "";
@@ -70,9 +70,8 @@ void loop() {
     if (Firebase.RTDB.getString(&fbdo, statusPath)) {
       String currentStatus = fbdo.stringData();
 
-      // Condições para reservar
       if (currentStatus == "open" && currentUID == "null") {
-        // Reservar armário
+
         Firebase.RTDB.setString(&fbdo, uidPath, cardUID);
         Firebase.RTDB.setString(&fbdo, statusPath, "closed");
         Firebase.RTDB.setString(&fbdo, lastAccessPath, now);
@@ -83,7 +82,7 @@ void loop() {
         lastProcessedStatus = "closed";
 
       } else if (currentUID == cardUID) {
-        // Liberar armário
+
         bool op1 = Firebase.RTDB.setString(&fbdo, uidPath, "null");
         delay(500);
         bool op2 = Firebase.RTDB.setString(&fbdo, statusPath, "open");
