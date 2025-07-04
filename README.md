@@ -64,4 +64,4 @@ secrets.h
 
 ## 👨‍💻 Autores
 
-Projeto desenvolvido por Matheus Bertoldo e grupo, como parte da disciplina de Internet das Coisas - UFLA.
+Projeto desenvolvido por João Pedro Ramalho de Sousa, Matheus Bertoldo, Renan Ribeiro Pereira, como parte da disciplina de Internet das Coisas na Universidade Federal de Lavras (UFLA).
